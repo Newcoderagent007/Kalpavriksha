@@ -3,9 +3,9 @@
 #include <ctype.h>
 #include <string.h>
 
-#define MAX_LEN 100
+#define MAX_EXPR_LEN 100
 
-
+// Function to apply an operator to two operands
 int applyOperator(char op, int a, int b) {
     switch (op) {
         case '+': return a + b;
@@ -21,61 +21,80 @@ int applyOperator(char op, int a, int b) {
     }
 }
 
-
+// Function to get the precedence of operators
 int precedence(char op) {
     if (op == '+' || op == '-') return 1;
     if (op == '*' || op == '/') return 2;
     return 0;
 }
 
+// Function to evaluate an expression
+int evaluateExpression(char *expr, int *result) {
+    int len = strlen(expr);
+    int stack[MAX_EXPR_LEN], top = -1;
+    char operators[MAX_EXPR_LEN];
+    int op_top = -1;
 
-int evaluateExpression(const char *expr, int *result) {
-    int values[MAX_LEN], values_top = -1;
-    char ops[MAX_LEN], ops_top = -1;
-    int i, num;
-
-    for (i = 0; expr[i]; i++) {
-        if (isspace(expr[i])) continue;
+    for (int i = 0; i < len; i++) {
+        if (isspace(expr[i])) {
+            continue;
+        }
 
         if (isdigit(expr[i])) {
-            num = 0;
-            while (isdigit(expr[i])) {
+            int num = 0;
+            while (i < len && isdigit(expr[i])) {
                 num = num * 10 + (expr[i] - '0');
                 i++;
             }
-            i--; 
-            values[++values_top] = num;
-        } else if (expr[i] == '+' || expr[i] == '-' || expr[i] == '*' || expr[i] == '/') {
-            while (ops_top >= 0 && precedence(ops[ops_top]) >= precedence(expr[i])) {
-                int b = values[values_top--];
-                int a = values[values_top--];
-                char op = ops[ops_top--];
-                values[++values_top] = applyOperator(op, a, b);
+            i--;
+            stack[++top] = num;
+        } else if (expr[i] == '(') {
+            operators[++op_top] = expr[i];
+        } else if (expr[i] == ')') {
+            while (op_top >= 0 && operators[op_top] != '(') {
+                int b = stack[top--];
+                int a = stack[top--];
+                char op = operators[op_top--];
+                stack[++top] = applyOperator(op, a, b);
             }
-            ops[++ops_top] = expr[i];
+            if (op_top >= 0) op_top--; // Pop '('
+        } else if (expr[i] == '+' || expr[i] == '-' || expr[i] == '*' || expr[i] == '/') {
+            while (op_top >= 0 && precedence(operators[op_top]) >= precedence(expr[i])) {
+                int b = stack[top--];
+                int a = stack[top--];
+                char op = operators[op_top--];
+                stack[++top] = applyOperator(op, a, b);
+            }
+            operators[++op_top] = expr[i];
         } else {
             printf("Error: Invalid expression.\n");
             return 0;
         }
     }
 
-    while (ops_top >= 0) {
-        int b = values[values_top--];
-        int a = values[values_top--];
-        char op = ops[ops_top--];
-        values[++values_top] = applyOperator(op, a, b);
+    while (op_top >= 0) {
+        int b = stack[top--];
+        int a = stack[top--];
+        char op = operators[op_top--];
+        stack[++top] = applyOperator(op, a, b);
     }
 
-    *result = values[values_top];
-    return 1;
+    if (top == 0) {
+        *result = stack[top];
+        return 1;
+    } else {
+        printf("Error: Invalid expression.\n");
+        return 0;
+    }
 }
 
 int main() {
-    char expr[MAX_LEN];
+    char expr[MAX_EXPR_LEN];
     int result;
 
     printf("Enter a mathematical expression: ");
     fgets(expr, sizeof(expr), stdin);
+    expr[strcspn(expr, "\n")] = '\0'; // Remove newline character from input
 
     if (evaluateExpression(expr, &result)) {
         printf("Result: %d\n", result);
