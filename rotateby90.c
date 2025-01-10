@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <string.h>
+
 
 void rotateby90(int n, int matrix[][n]) {
     
