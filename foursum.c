@@ -15,7 +15,7 @@ void foursum(int *arr,int n,int target){
         for(int j=i+1;j<n-2;j++){
             if(j > i+1 && arr[j] == arr[j-1]) continue;
             
-            int left = i+1;
+            int left = j+1;
             int right = n-1;
             
             while(left < right){
