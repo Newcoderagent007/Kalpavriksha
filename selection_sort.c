@@ -66,15 +66,7 @@ int main() {
     printf("\nSORTED VALUE OF STOCK IS (ascending order):\n");
     printlist(head);
 
-   
     int min_val = head->data; 
-    Node* temp = head->next;
-    while (temp != NULL) {
-        if (temp->data < min_val) {
-            min_val = temp->data;
-        }
-        temp = temp->next;
-    }
 
     printf("Stock was least priced is : %d\n", min_val); 
     return 0;
