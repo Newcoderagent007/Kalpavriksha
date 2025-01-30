@@ -2,24 +2,21 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define MAX 100 // Maximum size of the stack
+#define MAX 100
 
 typedef struct {
     int data[MAX];
     int top;
 } Stack;
 
-// Function to initialize the stack
 void initStack(Stack* stack) {
     stack->top = -1;
 }
 
-// Function to check if the stack is empty
 bool isEmpty(Stack* stack) {
     return stack->top == -1;
 }
 
-// Function to add an element to the stack
 void push(Stack* stack, int value) {
     if (stack->top == MAX - 1) {
         printf("Stack Overflow\n");
@@ -28,7 +25,6 @@ void push(Stack* stack, int value) {
     stack->data[++(stack->top)] = value;
 }
 
-// Function to remove the top element from the stack
 int pop(Stack* stack) {
     if (isEmpty(stack)) {
         printf("Stack Underflow\n");
@@ -37,7 +33,6 @@ int pop(Stack* stack) {
     return stack->data[(stack->top)--];
 }
 
-// Function to retrieve the top element without removing it
 int peek(Stack* stack) {
     if (isEmpty(stack)) {
         printf("Stack is empty\n");
@@ -46,12 +41,10 @@ int peek(Stack* stack) {
     return stack->data[stack->top];
 }
 
-// Function to return the number of elements in the stack
 int size(Stack* stack) {
     return stack->top + 1;
 }
 
-// Main function with a menu-based interface
 int main() {
     Stack stack;
     initStack(&stack);
