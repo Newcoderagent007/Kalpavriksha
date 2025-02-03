@@ -58,6 +58,12 @@ int size(Stack* stack) {
     return stack->size;
 }
 
+void freeStack(Stack* stack) {
+    while (!isEmpty(stack)) {
+        pop(stack);
+    }
+}
+
 int main() {
     Stack stack;
     initStack(&stack);
@@ -104,6 +110,7 @@ int main() {
                 break;
             case 6:
                 printf("Exiting...\n");
+                freeStack(&stack);
                 exit(0);
             default:
                 printf("Invalid choice! Please try again.\n");
