@@ -34,11 +34,11 @@ int main() {
         printf(">");
         scanf(" cd %s",str);
 
-        if (strncmp(str, "../", 6) == 0) {
+        if (strcmp(str, "../") == 0) {
             if (s.top != -1) {
                 pop(&s);
             }
-        } else if (strncmp(str, "./", 5) == 0) {
+        } else if (strcmp(str, "./") == 0) {
             continue;
         } else {
             push(&s, str); 
@@ -47,7 +47,7 @@ int main() {
     char result[MAXSIZE * MAXSIZE] = "/";
     for (int i = 0; i <= s.top; i++) {
         strcat(result, s.arr[i]);
-        //strcat(result, "/");
+        
     }
 
     printf("Current working directory: %s\n", result);
